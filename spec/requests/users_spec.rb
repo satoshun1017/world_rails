@@ -2,8 +2,21 @@ require 'rails_helper'
 
 RSpec.describe "Users", type: :request do
   describe "GET /users" do
-    it "ユーザーの一覧が見れる" do
-      get users_path
+    subject { get users_path }
+    before do
+      # 3.times {create(:user)}
+      create_list(:user, 3)
+      #上のやつは同じ意味
+    end
+    fit "ユーザーの一覧が見れる" do
+      # 3.times {create(:user)}
+      # binding.pry
+      subject
+
+      binding.pry
+      res = JSON.parse(response.body)
+      expect(res.length).to eq 3
+      expect(res[0].keys).to eq ["id", "account", "name", "created_at", "updated_at", "email"]
       expect(response).to have_http_status(200)
     end
   end
